@@ -4,15 +4,15 @@ if &compatible
 endif
 
 " Required:
-set runtimepath+=/home/lukepeterson/.cache/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=$HOME/.cache/dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-if dein#load_state('/home/lukepeterson/.cache/dein')
-  call dein#begin('/home/lukepeterson/.cache/dein')
+if dein#load_state('$HOME/.cache/dein')
+  call dein#begin('$HOME/.cache/dein')
 
   " Let dein manage dein
   " Required:
-  call dein#add('/home/lukepeterson/.cache/dein/repos/github.com/Shougo/dein.vim')
+  call dein#add('$HOME/.cache/dein/repos/github.com/Shougo/dein.vim')
 
   " Add or remove your plugins here like this:
   "call dein#add('Shougo/neosnippet.vim')
@@ -26,7 +26,6 @@ if dein#load_state('/home/lukepeterson/.cache/dein')
 
   "" vim-evanesco (nicer search)
   call dein#add('pgdouyon/vim-evanesco')
-
 
   "" nerdtree (tree explorer)
   call dein#add('scrooloose/nerdtree')
@@ -61,6 +60,8 @@ if dein#load_state('/home/lukepeterson/.cache/dein')
   "" vim-lsc (language server client)
   call dein#add('prabirshrestha/vim-lsp')
 
+  "" vim-clang-format
+  call dein#add('rhysd/vim-clang-format')
 
   " Required:
   call dein#end()
@@ -100,6 +101,27 @@ set noswapfile
 "" Toggle line numbers
 nmap <C-l><C-l> :set invnumber<CR>
 
+""""""""""""""""""
+"" clang-format ""
+""""""""""""""""""
+
+"" Set base style
+let g:clang_format#code_style = "google"
+
+"" Set extra style options
+let g:clang_format#style_options = {"ColumnLimit" : 80,
+                                  \ "DerivePointerAlignment" : "false",
+                                  \ "PointerAlignment" : "Left"}
+
+"" Manually select specific clang-format version
+let g:clang_format#command = "clang-format-9"
+
+"" Turn on clang-format on buffer write by default
+let g:clang_format#auto_format = 0
+
+"" Toggle clang-format formatting on buffer write
+nmap <Leader>C :ClangFormatAutoToggle<CR>
+nmap <Leader>F :ClangFormat<CR>
 
 """"""""""""""""""""""""""
 "" Text, tab and indent ""
@@ -144,6 +166,12 @@ let g:lsp_diagnostics_echo_cursor = 1
 "" Use async completion
 let g:lsp_async_completion = 1
 
+"" Language server protocol logging
+let g:lsp_log_verbose = 0
+
+"" Language server protocol logging file
+let g:lsp_log_file = expand('~/tmp/vim-lsp.log')
+
 "" Mapping for Rename
 nnoremap mR :LspRename<CR>
 
@@ -178,7 +206,9 @@ nnoremap mT :LspTypeDefinition<CR>
 nnoremap ms :LspWorkspaceSymbol<CR>
 
 "" Setup clangd integration
-if executable('clangd')
+"" TODO: find a way to make shell alias found, or set up symlinks so clangd-9
+""       can be changed to clangd
+if executable('clangd-9')
     au User lsp_setup call lsp#register_server({
         \ 'name': 'clangd',
         \ 'cmd': {server_info->['clangd-9']},
