@@ -208,10 +208,11 @@ nnoremap ms :LspWorkspaceSymbol<CR>
 "" Setup clangd integration
 "" TODO: find a way to make shell alias found, or set up symlinks so clangd-9
 ""       can be changed to clangd
+"" TODO: Figure out why $HOME doesn't expand after --compile-commands-dir
 if executable('clangd-9')
     au User lsp_setup call lsp#register_server({
         \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd-9']},
+        \ 'cmd': {server_info->['clangd-9', '--compile-commands-dir=/home/lukepeterson/tmp']},
         \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
         \ })
 endif
